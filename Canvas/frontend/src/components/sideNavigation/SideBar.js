@@ -310,20 +310,28 @@ class SideBar extends React.Component {
                   </ListItem>
 
                   {/* Inbox */}
-                  <ListItem className={classes.flex_clm} onClick={this.handleChild3DrawerToggle} onClick={this.handleClick} button > 
+                  {/* <ListItem className={classes.flex_clm} onClick={this.handleChild3DrawerToggle} onClick={this.handleClick} button > 
                       <ListItemIcon className={classes.icon_set1} ><img alt="help" className={this.state.open? classes.manu_icon_svg_open : classes.manu_icon_svg} src={require("../../utils/help.svg")} /></ListItemIcon>
                      
                       <span className={classNames(classes.manu_item_name, {[classes.hide]: !this.state.open,})} > Inbox</span>
-                    </ListItem>
+                    </ListItem> */}
 
                   {/* Add Code : Faculty */}
                   <ListItem className={classes.flex_clm} component={Link} to='/addCode' 
-                   style={{display: this.state.is_student == "true" ? 'none' : 'inline-flex'}}
+                   style={{display: this.state.is_student == "true" ? 'none' : 'flex'}}
+                   onClick={this.handleClick}
+                   button >
+                      <ListItemIcon className={classes.icon_set1} ><img alt="Add Code" className={this.state.open? classes.manu_icon_svg_open : classes.manu_icon_svg} src={require("../../utils/help.svg")} /></ListItemIcon>
+                      {/* <ListItemText primary="Book" /> */}
+                       <span className={classNames(classes.manu_item_name, {[classes.hide]: !this.state.open,})} > Add Code</span>
+                    </ListItem>
+
+                    <ListItem className={classes.flex_clm} component={Link} to='/inbox' 
                    onClick={this.handleClick}
                    button >
                       <ListItemIcon className={classes.icon_set1} ><img alt="inbox" className={this.state.open? classes.manu_icon_svg_open : classes.manu_icon_svg} src={require("../../utils/inbox.svg")} /></ListItemIcon>
                       {/* <ListItemText primary="Book" /> */}
-                       <span className={classNames(classes.manu_item_name, {[classes.hide]: !this.state.open,})} > Add Code</span>
+                       <span className={classNames(classes.manu_item_name, {[classes.hide]: !this.state.open,})} > Inbox</span>
                     </ListItem>
 
                     {/* Minimize/Maximize side bar size */}

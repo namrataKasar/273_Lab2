@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import {Typography, Button, Paper, TextField} from '@material-ui/core';
-import Divider from '@material-ui/core/Divider';
-import axios from 'axios';
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router'
+import { bindActionCreators } from 'redux';
+import {Route} from 'react-router-dom';
+import * as assignmentData from '../../actions/assignmentAction';
 
 const styles = theme => ({
 //   root: {
@@ -89,7 +89,7 @@ class Assignments extends React.Component {
     open: false,
     openPast: true,
     createAssignment : '',
-    asignmentTitle: '',
+    assignmentTitle: '',
     dueDate : '',
     totalPoints : '',
     fileUploaded : '',
@@ -98,6 +98,7 @@ class Assignments extends React.Component {
     is_student: window.sessionStorage.getItem('is_student'),
     assignmentsList : '',
     showSubmit : false,
+    redirectVar : '', 
   };
 
   componentWillMount = () => {
@@ -108,25 +109,24 @@ class Assignments extends React.Component {
       sjsuID: window.sessionStorage.getItem('sjsuID'),
     }
 
-    // this.setState({
-    //   courseId: window.sessionStorage.getItem('courseId'),
-    //   sjsuID: window.sessionStorage.getItem('sjsuID'),
-    //   is_student: window.sessionStorage.getItem('is_student'),
-    // })
+    this.setState({
+      is_student: this.props.assignmentData.LoginReducer.LoginReducer.is_student,
+      sjsuID: this.props.assignmentData.LoginReducer.LoginReducer.sjsuID,
+    })
+    console.log(this.props.assignmentData.LoginReducer.LoginReducer.submissions)
 
-    // axios.post('./getAssignments', {data})
-    // .then(response => {
-    //   console.log(response);
-    //   this.setState({
-    //     courseId: window.sessionStorage.getItem('courseId'),
-    //     sjsuID: window.sessionStorage.getItem('sjsuID'),
-    //     is_student: window.sessionStorage.getItem('is_student'),
-    //     assignmentsList : response.data
-    //   })
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // }) 
+    this.props.getAssignment(data)
+    .then(response => {
+      const propsData = this.props.assignmentData.CourseReducer.CourseReducer;
+      console.log(propsData);
+      this.setState({
+        createAssignment : false,
+        assignmentsList:propsData.assignments,
+      })
+    })
+    .catch(error => {
+      console.log(error);
+    })
   }
 
   handleClick = () => {
@@ -173,10 +173,16 @@ class Assignments extends React.Component {
     // })
   }
 
-  submitAssignment = (e) => {
+  submitAssignment = (e, assignment) => {
     e.preventDefault();
+    console.log(assignment);
     this.setState({
-      showSubmit : true
+      redirectVar : <Redirect to={{
+                pathname: "/course/submission",
+                state: {
+                  assignment : assignment,
+                  sjsuID : this.state.sjsuID,
+                }}}/>
     })
   }
 
@@ -187,16 +193,20 @@ class Assignments extends React.Component {
     // })
 
     const data = this.state;
-    // axios.post('/assignment/create', {data})
-    // .then(response => {
-    //   console.log(response);
-    //   this.setState({
-    //     createAssignment: false
-    //   })
-    //   this.componentWillMount();
-    // }).catch(error => {
-    //   console.log(error);
-    // })
+    this.props.createAssignment(data)
+    .then(response => {
+      console.log("In assignment response");
+        {
+          const propsData = this.props.assignmentData.CourseReducer.CourseReducer;
+          console.log(propsData);
+          this.setState({
+            createAssignment : false,
+            assignmentsList:propsData.assignments,
+          })
+        }
+      
+    })
+    
     console.log(data);
   }
 
@@ -205,12 +215,15 @@ class Assignments extends React.Component {
     const header = "Assignments";
     return (
       <div style={{marginTop: '70px'}}>
-
+    
+        {this.state.redirectVar}
         <div className={classes.root} >
             <Typography variant="h6" className={classes.textColor1} noWrap>
                 {header}
             </Typography>
-            <div >
+            <div 
+            style={{display: this.state.is_student ?  'none' : 'block'}}
+            >
               <Button type="submit" variant="contained" color="primary" className={classes.button}
               onClick={this.showCreate}
               style={{display: this.state.createAssignment ? 'none' : 'initial'}}>
@@ -228,11 +241,11 @@ class Assignments extends React.Component {
                          <Grid item xs={12}>
                           <div>
                             <TextField
-                              id="asignmentTitle"
+                              id="assignmentTitle"
                               label="Assignment Title"
                               className={classes.textField2}
-                              value={this.state.asignmentTitle}
-                              onChange={this.handleChange('asignmentTitle')}
+                              value={this.state.assignmentTitle}
+                              onChange={this.handleChange('assignmentTitle')}
                               margin="normal"
                               required
                               >
@@ -301,6 +314,19 @@ class Assignments extends React.Component {
                             </Button>
                         </div>
                     </form>
+                    <div>
+                            <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary" 
+                            className={classes.button}
+                            onClick={() => {
+                              console.log("Helosdfs");
+                              this.state.createAssignment = false}}
+                            >
+                            Cancel
+                            </Button>
+                        </div>
         </Paper>
         <List 
         style={{display: this.state.createAssignment && this.state.assignmentsList.length <= 0 ?  'none' : 'block'}}
@@ -351,7 +377,8 @@ class Assignments extends React.Component {
 
                                 </Grid>
                             </Grid>
-                            {/* <Grid style={{display: this.state.is_student == "true" ? 'block' : 'none'}}
+                            
+                            <Grid style={{display: this.state.is_student == true ? 'block' : 'none'}}
                             item xs={3}>
                                 <Grid
                                     container
@@ -364,26 +391,7 @@ class Assignments extends React.Component {
                                     variant="contained"
                                     color="primary" 
                                     className={classes.button}
-                                    >
-                                      Submit Assignment
-                                    </Button>
-
-                                </Grid>
-                            </Grid> */}
-                            <Grid style={{display: this.state.is_student == "true" ? 'block' : 'none'}}
-                            item xs={3}>
-                                <Grid
-                                    container
-                                    direction="column"
-                                    justify="flex-start"
-                                    alignItems="flex-start"
-                                >
-                                    <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary" 
-                                    className={classes.button}
-                                    onClick={this.submitAssignment}
+                                    onClick={(e) => this.submitAssignment(e, this.state.assignmentsList[text])}
                                     >
                                       Submit Assignment
                                     </Button>
@@ -391,58 +399,7 @@ class Assignments extends React.Component {
                                 </Grid>
                             </Grid>
                               
-                              <Grid  item xs={12}>
-                                <div className={classes.paperClass}
-                                  style={{display: this.state.showSubmit ? 'block' : 'none'}}>
-                                    <form className={classes.container} onSubmit={this.createAssignment}>
-                                                <div className={classes.fullWidth}>
-                                                  <label style={{color:'red'}}>{this.state.errorMessage}</label>
-                                                </div>
-                                                {/* <Grid container spacing={12}> 
-                                                <Grid item xs={12}>
-                                                  <div>
-                                                    <TextField
-                                                      id="asignmentTitle"
-                                                      label="Assignment Title"
-                                                      className={classes.textField2}
-                                                      value={this.state.asignmentTitle}
-                                                      onChange={this.handleChange('asignmentTitle')}
-                                                      margin="normal"
-                                                      disabled
-                                                      >
-                                                    </TextField>
-                                                  </div>
-                                                  </Grid>
-                                                </Grid> */}
-
-                                              <Grid container spacing={12}> 
-                                                <Grid item xs={6}>
-                                                  <div>
-                                                    <TextField
-                                                      id="fileUploaded"
-                                                      label="Upload File"
-                                                      type="file"
-                                                      className={classes.textField}
-                                                      onChange={this.fileHandler}
-                                                      margin="normal"
-                                                      >
-                                                    </TextField>
-                                                  </div>
-                                                  </Grid>
-                                                </Grid>
-                                                <div>
-                                                    <Button
-                                                    type="submit"
-                                                    variant="contained"
-                                                    color="primary" 
-                                                    className={classes.button}
-                                                    >
-                                                    Submit Assignment
-                                                    </Button>
-                                                </div>
-                                            </form>
-                                  </div>
-                              </Grid>
+                              
                         </Grid>
 
                       
@@ -461,4 +418,13 @@ Assignments.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Assignments);
+const mapStateToProps = (state) => {
+  return{
+    assignmentData : state
+  }
+}
+
+const mapDispacthToProps = (dispatch) => {
+  return bindActionCreators(assignmentData, dispatch);
+}
+export default connect(mapStateToProps, mapDispacthToProps)(withStyles(styles)(Assignments));

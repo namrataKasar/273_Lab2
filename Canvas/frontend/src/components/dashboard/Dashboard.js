@@ -6,6 +6,9 @@ import Axios from 'axios';
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as getData from '../../actions/enrollmentAction'
+import HTML5Backend from 'react-dnd-html5-backend'
+import { DragDropContext } from 'react-dnd';
+import update from 'immutability-helper';
 
 class Dashboard extends React.Component {
     state={
@@ -27,8 +30,7 @@ class Dashboard extends React.Component {
         email: '',
         redirectVar: null,
         username: '',
-        initials: ''
-
+        initials: '',
     }
 
     componentWillReceiveProps(nextProps){
@@ -61,7 +63,8 @@ class Dashboard extends React.Component {
                 profilePic: propsData.profilePic,
                 email: propsData.email,
                 is_student: propsData.is_student,
-                rows: propsData.courses
+                rows: propsData.courses,
+
             })
           }
       })
@@ -100,12 +103,40 @@ class Dashboard extends React.Component {
         })
       }
 
+      moveCard = (dragIndex, hoverIndex) => {
+         const { rows } = this.state;
+        console.log(this.props.userData.LoginReducer.LoginReducer.courses);
+        console.log(dragIndex);
+        console.log(hoverIndex);
+    
+        const cards = this.props.userData.LoginReducer.LoginReducer.courses;
+        const dragCard = rows[dragIndex]
+
+        console.log(dragCard);
+    
+        this.setState( 
+          update(this.state, {
+            rows: {
+              $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]],
+            },
+          }),
+        )
+      }
+
     render(){        
         var elements=[];
         let rows = this.props.userData.LoginReducer.LoginReducer.courses;
         console.log(rows);
         for(var i=0;i<rows.length;i++){
-        elements.push(<Card key={i} value={rows[i]} />);
+        elements.push(
+          <Card 
+            key={i}
+            id={rows[i].COURSE_ID} 
+            index={i}
+            value={rows[i]} 
+            moveCard={this.moveCard}
+          />
+        );
         }
         let message = ''; 
         if(rows.length == 0)
@@ -148,4 +179,4 @@ const mapDispatchToProps = (dispatch) => {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)( DragDropContext(HTML5Backend)(Dashboard));

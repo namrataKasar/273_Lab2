@@ -10,7 +10,11 @@ import Signup from './components/loginSignup/Signup';
  import EditProfile from './components/profile/EditProfile';
  import CreateCourse from './components/courseAddOrCreate/CreateCourse';
  import RegisterForCourses from './components/courseAddOrCreate/registerForCourse/RegisterForCourses';
- import CourseHome from './components/courseDashboard/CourseHome'
+ import CourseHome from './components/courseDashboard/CourseHome';
+ import AssignmentSubmission from './components/courseDashboard/AssignmentSubmission';
+ import TakeQuiz from './components/courseDashboard/TakeQuiz';
+import Inbox from './components/Inbox';
+import AddCode from './components/AddCode';
 // import Card from './components/Dashboard/Card';
 // import RegisterForCourses from './components/Courses/RegisterForCourses';
 // import CreateCourse from './components/Courses/CreateCourses'
@@ -37,6 +41,10 @@ class App extends Component {
             <Route path="/registercourses/home" component={RegisterForCourses} />
             <Route path="/registercourses/addcourse" component={RegisterForCourses} />
             <Route path="/course" component={CourseHome} />
+            <Route path="/course/submission" component={AssignmentSubmission}/>
+            <Route path="/course/takequiz" component={TakeQuiz}/>
+            <Route path="/inbox" component={Inbox} /> 
+            <Route path="/addCode" component={AddCode} /> 
 
             {/* <Route path="/test" component={Test}/>
             <Route path="/sidenav" component={Sidenav}/> 

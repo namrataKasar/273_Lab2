@@ -18,7 +18,7 @@ import People from './People';
 // import People from './People';
 // import Home from './Home';
 import Announcements from './Announcements';
-// import Quizzes from './Quizzes/Quizzes';
+import Quizzes from './Quizzes';
 import Assignments from './Assignments';
 // import Files from './files';
 
@@ -187,6 +187,7 @@ class CourseInsideMenu extends React.Component {
             <Route path="/course/people" render={()=> { return <People />}} />
             <Route path="/course/announcements" render={()=> { return <Announcements />}} />
             <Route path="/course/assignments" render={()=> { return <Assignments />}} />
+            <Route path="/course/quizzes" render={()=> { return <Quizzes />}} />
             {/*<Route path="/course/people" render={()=> { return <People />}} />
             <Route path="/course/announcements" render={()=> { return <Announcements />}} />
             <Route path="/course/files" render={()=> { return <Files />}} />

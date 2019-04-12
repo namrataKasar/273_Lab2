@@ -57,6 +57,23 @@ const UserSchema = new mongoose.Schema({
     COURSES: [
         { type: mongoose.Schema.ObjectId, ref: 'Course' }
     ],
+    SUBMISSIONS: [
+        {
+            FILE_PATH: String,
+            ASSIGNMENTS: {
+                type: mongoose.Schema.ObjectId, ref: 'Assignment'
+            },
+            DATE: Date,
+            GRADES: Number,
+        }
+    ],
+    RECEIVED_MESSAGES:[
+        {
+            MESSAGE: String,
+            Date: Date,
+            FROM: String,
+        }
+    ]
 })
 
 const User = mongoose.model('User', UserSchema);
