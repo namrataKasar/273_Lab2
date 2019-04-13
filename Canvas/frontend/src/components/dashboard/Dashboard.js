@@ -7,6 +7,8 @@ import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as getData from '../../actions/enrollmentAction'
 
+// import Draggable from 'react-draggable';
+
 class Dashboard extends React.Component {
     state={
         sjsuID : '', //logged in user
@@ -127,7 +129,9 @@ class Dashboard extends React.Component {
                                   <Typography variant="h6" style={{color: '#008ee2'}} noWrap>
                                       {message}
                                   </Typography>
+                                  
                                     {elements}
+                                  
                             </div>
                         </Grid>
                     </Grid>
