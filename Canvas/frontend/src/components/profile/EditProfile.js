@@ -135,20 +135,29 @@ class UserProfile extends React.Component {
     console.log(file);
     const fd = new FormData();
     fd.append('profileImage',file[0], file[0].name);
+    console.log(fd);
 
-    axios.post('/uploadProfileImage', fd)
-    .then((response) => {
-      console.log("http://localhost:3001/" + response.data.substring(9) + file[0].name);
-      //let temp = [].concat(response.data)
-      // if (temp[0]['msg'] === "Success") {
-        this.setState({
-          profilePic: "http://localhost:3001/" + response.data.substring(9) + file[0].name
-        })
+    this.props.uploadProfileImage(fd);
+    // .then(response => {
+    //     console.log("In edit profile success");
+    // })
+    // .catch(error => {
+
+    // })
+
+    // axios.post('/uploadProfileImage', fd)
+    // .then((response) => {
+    //   console.log("http://localhost:3001/" + response.data.substring(9) + file[0].name);
+    //   //let temp = [].concat(response.data)
+    //   // if (temp[0]['msg'] === "Success") {
+    //     this.setState({
+    //       profilePic: "http://localhost:3001/" + response.data.substring(9) + file[0].name
+    //     })
          
-    })
-    .catch(error => {
-      console.log(error);
-    })
+    // })
+    // .catch(error => {
+    //   console.log(error);
+    // })
   }
 
   submitUpdate = (e) => {
@@ -183,10 +192,6 @@ class UserProfile extends React.Component {
   render() {
     const { classes } = this.props;
     const header = "Edit Profile";
-    // if(this.state.sjsuID == '')
-    // {
-    //   return <Redirect to="/login" /> 
-    // }
     return (
       <div>
           {this.state.redirectVar}

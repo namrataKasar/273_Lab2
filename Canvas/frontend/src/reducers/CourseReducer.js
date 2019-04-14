@@ -13,7 +13,8 @@ const initialState = {
     announcements: '',
     assignments: '',
     quizzes: '',
-    errorMessage: ''
+    errorMessage: '',
+    currentFile: ''
 }
 
 const CourseReducer = (state = initialState, action) => {
@@ -106,7 +107,17 @@ const CourseReducer = (state = initialState, action) => {
                                 }
                                 break; 
                                 
-        
+        case "ASSIGN_FILE" : console.log(action.payload);
+                            if(action.payload.imageURL)
+                            {
+                                state = {
+                                    ...state,
+                                    currentFile : action.payload.imageURL,
+                                    errorMessage : ''
+                                }
+                            }
+                            
+                            break;
     }
     return state;
 

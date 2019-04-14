@@ -4,6 +4,10 @@ var cors = require('cors');
 
 var datetime = require('node-datetime');
 
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+
 assignments.use(cors());
 const Assignment = require('../models/Assignment');
 const Course = require("../models/Course");
@@ -111,33 +115,56 @@ assignments.post('/assignment/submit', (req, res) => {
                     
                 })
             })
-        })
-        //     User.findOne({
-        //         SJSU_ID : newUser.SJSU_ID
-        //     })
-        //     .populate('SUBMISSIONS.ASSIGNMENTS'
-        //     //     {
-        //     //     path:'SUBMISSIONS',
-        //     //     populate: {path: 'ASSIGNMENTS' }
-        //     // }
-        //     )
-        //     .exec((err, upUser) => {
-        //         if(err)
-        //         {
-        //             throw err;
-        //         }
-        //         console.log("**********")
-        //         console.log(upUser);
-        //         res.json({
-        //             user : upUser
-        //         })
-        //     });
-        // })
-        // .catch(error => {
-        //     res.json(error);
-        // })
     })
 
+    })
 })
+
+//Upload assignment file
+assignments.post('/assignment/upload', (req, res) => {
+
+   //File upload starts
+    console.log(req.get('courseId'));
+    var userFolder = 'namcanvas' + '/' + req.get('courseId') + '/Assignments';
+    
+    aws.config.update({
+        accessKeyId :'AKIAZC7CQASPVATLUEXY',
+        secretAccessKey : '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',
+        region : 'us-west-1',
+        
+    })
+    
+    const s3 = new aws.S3({    
+        sslEnabled: false,
+    });
+    
+    const upload = multer({
+        storage: multerS3({
+          s3: s3,
+          acl: 'public-read',
+          bucket: userFolder,
+          contentType: multerS3.AUTO_CONTENT_TYPE,
+          key: function (req, file, cb) {
+            cb(null, Date.now().toString())
+          }
+        })
+      })
+
+      const singleUpload = upload.single('assignmentFile');
+
+      singleUpload(req, res, function(err){
+        console.log(req.file);
+        if (err) {
+            return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message}] });
+        }
+        return res.json({
+            imageURL : req.file.location,
+        });
+    })
+
+
+})
+
+
 
 module.exports = assignments;
