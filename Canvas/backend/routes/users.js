@@ -8,6 +8,21 @@ const keys = require('../config/keys');
 
 //Model
 const User = require('../models/User');
+var upload = require('../config/uploadService');
+
+const singleUpload = upload.single('profileImage');
+
+// abstracts function to upload a file returning a promise
+const uploadFile = (buffer, name, type) => {
+    const params = {
+      ACL: 'public-read',
+      Body: buffer,
+      Bucket: '',
+      ContentType: type.mime,
+      Key: `${name}.${type.ext}`
+    };
+    return uploadService.s3.upload(params).promise();
+  };
 
 //Signup
 users.post('/signup', (req,res) => {
@@ -193,38 +208,6 @@ users.put('/user/update', (req, res) => {
             }
         });
     })
-    // User.update(userInfo;
-    //     {
-    //         where: {
-    //             SJSU_ID: req.body.data.sjsuID
-    //         }
-    //     }
-    // )
-    // .then((user) => {
-    //         console.log(user);
-    //         code = 200;
-    //         message = 'OK';
-    //         response = "Details of '"+user.SJSU_ID+"' are successfully updated.";
-    //         res.json({
-    //             code: code,
-    //             message: message,
-    //             response: {
-    //                 msg: response,
-    //                 data: user
-    //             }
-    //         });
-    // })
-    // .catch(err => {
-    //     code = 500;
-    //     response = err;
-
-    //     res.json({
-    //         code: code,
-    //         response: {
-    //             msg: response
-    //         }
-    //     });
-    // })
 });
 
 //Get all users (for Inbox)
@@ -238,6 +221,21 @@ users.get('/getAllUsers', (req, res) => {
     
         res.json({users});  
       });
+})
+
+//Upload profile image
+users.post('/profile/upload', (req, res) => {
+
+    const checkIn = req;
+    singleUpload(req, res, function(err){
+        console.log(req.file);
+        if (err) {
+            return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}] });
+        }
+        return res.json({
+            imageURL : req.file.location,
+        });
+    })
 })
 
 //Logout

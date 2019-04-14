@@ -107,6 +107,13 @@ const LoginReducer = (state = initialState, action) => {
                                 message: "Message Sent Successfully to : ",
                             }
                             break;
+                        
+    case "PROFILE_IMAGE" : console.log(action.payload);
+                            state = {
+                                ...state,
+                                profilePic: action.payload.imageURL,
+                            }
+                            break;
 
             
         

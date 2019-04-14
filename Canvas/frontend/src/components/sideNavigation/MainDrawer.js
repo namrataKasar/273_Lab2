@@ -92,7 +92,8 @@ class MainDrawer extends React.Component {
         this.setState ({
           sjsuID: propsData.sjsuID,
           username: propsData.fName + " " + propsData.lName,
-          initials: propsData.fName.substring(0,1) + " " + propsData.lName.substring(0,1)
+          initials: propsData.fName.substring(0,1) + " " + propsData.lName.substring(0,1),
+          profilePic: propsData.profilePic,
         })
       }
     }

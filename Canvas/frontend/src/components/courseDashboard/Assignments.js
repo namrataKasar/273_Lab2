@@ -155,7 +155,22 @@ class Assignments extends React.Component {
     console.log(e.target.files);
     let file = e.target.files;
     const fd = new FormData();
-    fd.append('assignments',file[0], file[0].name);
+    fd.append('assignmentFile',file[0], file[0].name);
+    fd.append('courseId', this.state.courseId);
+    console.log(fd.get('courseId'));
+
+    // const data = {
+    //   courseId : this.state.courseId,
+    //   formData : fd
+    // }
+
+    this.props.uploadAssignment(fd)
+    .then(response=> {
+      console.log(this.props.assignmentData.CourseReducer.CourseReducer.currentFile);
+      this.setState({
+        fileUploaded : this.props.assignmentData.CourseReducer.CourseReducer.currentFile
+      })
+    })
 
     // this.setState({
     //   fileUploaded: fd,
@@ -178,7 +193,20 @@ class Assignments extends React.Component {
     console.log(assignment);
     this.setState({
       redirectVar : <Redirect to={{
-                pathname: "/course/submission",
+                pathname: "/course/assignment/submission",
+                state: {
+                  assignment : assignment,
+                  sjsuID : this.state.sjsuID,
+                }}}/>
+    })
+  }
+
+  viewAssignment = (e, assignment) => {
+    e.preventDefault();
+    console.log(assignment);
+    this.setState({
+      redirectVar : <Redirect to={{
+                pathname: "/course/assignment/view",
                 state: {
                   assignment : assignment,
                   sjsuID : this.state.sjsuID,
@@ -298,6 +326,7 @@ class Assignments extends React.Component {
                               className={classes.textField}
                               onChange={this.fileHandler}
                               margin="normal"
+                              required
                               >
                             </TextField>
                           </div>
@@ -359,7 +388,7 @@ class Assignments extends React.Component {
                             <Grid item xs={1}>
                                 <AssignmentIcon className={classes.icon} />
                             </Grid>
-                            <Grid item xs={8}>
+                            <Grid item xs={6}>
                                 <Grid
                                     container
                                     direction="column"
@@ -377,9 +406,29 @@ class Assignments extends React.Component {
 
                                 </Grid>
                             </Grid>
+
+                            <Grid item xs={2}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                >
+                                    <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary" 
+                                    className={classes.button}
+                                    onClick={(e) => this.viewAssignment(e, this.state.assignmentsList[text])}
+                                    >
+                                      View Assignment
+                                    </Button>
+
+                                </Grid>
+                            </Grid>
                             
                             <Grid style={{display: this.state.is_student == true ? 'block' : 'none'}}
-                            item xs={3}>
+                            item xs={2}>
                                 <Grid
                                     container
                                     direction="column"
@@ -394,6 +443,27 @@ class Assignments extends React.Component {
                                     onClick={(e) => this.submitAssignment(e, this.state.assignmentsList[text])}
                                     >
                                       Submit Assignment
+                                    </Button>
+
+                                </Grid>
+                            </Grid>
+
+                            <Grid style={{display: this.state.is_student == true ? 'none' : 'block'}}
+                            item xs={2}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                >
+                                    <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary" 
+                                    className={classes.button}
+                                    // onClick={}
+                                    >
+                                      View Submissions
                                     </Button>
 
                                 </Grid>
