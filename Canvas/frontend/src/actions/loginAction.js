@@ -14,6 +14,20 @@ export function userInfo(values){
     }
 }
 
+export function messageInfo(values){
+    return{
+        type:"MESSAGE_INFO",
+        payload:values
+    }
+}
+
+export function allUsersInfo(values){
+    return{
+        type:"ALL_USERS",
+        payload:values
+    }
+}
+
 export function logOut(values){
     return{
         type:"USER_LOGOUT",
@@ -43,8 +57,8 @@ export function getUserDetails(data){
 export function updateUserDetails(data){
     return dispatch => {
         return axios.put('/user/update',{data}).then((response)=>{
-            console.log(response.data);
-            dispatch(userInfo(response.data));
+            console.log(response.data.response.data);
+            dispatch(userInfo(response.data.response.data));
         });
     }
 }
@@ -79,6 +93,28 @@ export const getCourseDetails = (data) => {
         .then(response => {
             console.log(response);
             dispatch(courseInfo(response.data.course));
+        })
+    }
+}
+
+export function getAllUsers(){
+    return dispatch => {
+        return axios.get('/getAllUsers')
+        .then(response => {
+            console.log(response);
+            dispatch(allUsersInfo(response.data.users));
+        })
+    }
+}
+
+//Send Message
+export function sendMessage(data){
+    return dispatch => {
+        console.log(data);
+        return axios.post('/send/message', {data})
+        .then(response => {
+            console.log(response);
+            dispatch(messageInfo(response.data.user));
         })
     }
 }

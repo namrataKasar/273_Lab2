@@ -103,16 +103,26 @@ class UserProfile extends React.Component {
             sjsuID: window.sessionStorage.getItem("sjsuID")
         }
         
-        this.props.getUserDetails(sendData).then(
-            (data) => {
-                console.log("Hello")
-                console.log(data);
-            },
-            (err) => {
+        const propsData = this.props.userData.LoginReducer.LoginReducer
+        if(this.props.userData){
+            this.setState ({
+                sjsuID: propsData.sjsuID,
+                fName: propsData.fName,
+                lName: propsData.lName,
+                phoneNo: propsData.phoneNo,
+                city: propsData.city,
+                country: propsData.country,
+                company: propsData.company,
+                school: propsData.school,
+                hometown: propsData.hometown,
+                language: propsData.language,
+                gender: propsData.gender,
+                aboutMe: propsData.aboutMe,
+                profilePic: propsData.profilePic,
+                email: propsData.email
+            })
 
-            }
-
-        );
+        }
 
 }
 

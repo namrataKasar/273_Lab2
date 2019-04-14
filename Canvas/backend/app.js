@@ -67,6 +67,9 @@ app.use('/', require('./routes/users'));
 app.use('/', require('./routes/courses'));  
 app.use('/', require('./routes/enrollment')); 
 app.use('/', require('./routes/announcement')); 
+app.use('/', require('./routes/assignments')); 
+app.use('/', require('./routes/quizzes')); 
+app.use('/', require('./routes/messages')); 
 
 module.exports = app;
 app.listen(PORT, () => console.log('Listening on port 3001'));   

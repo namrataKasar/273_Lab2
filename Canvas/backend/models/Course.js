@@ -40,12 +40,18 @@ const CourseSchema = new mongoose.Schema({
     STUDENTS_ENROLLED: [
         { type: mongoose.Schema.ObjectId, ref: 'User' }
     ],
+    ASSIGNMENTS: [
+        { type: mongoose.Schema.ObjectId, ref: 'Assignment' }
+    ],
     ANNOUNCEMENTS : [
         {
             TITLE : String,
             DESCRIPTION : String,
             POSTED_DATE : Date
         }
+    ],
+    QUIZZES : [
+        { type: mongoose.Schema.ObjectId, ref: 'Quiz' }
     ]
 })
 

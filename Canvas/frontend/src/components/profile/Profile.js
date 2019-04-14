@@ -90,7 +90,8 @@ class Profile extends React.Component{
 
     componentWillMount = () => {
 
-        // console.log(window.sessionStorage.getItem('userId'));
+         console.log("Hello in profile");
+         console.log(this.props);
         const data = this.props.location.state;
         this.setState({
             username : data.username,
@@ -98,19 +99,60 @@ class Profile extends React.Component{
         })
 
         var sendData = {
-            sjsuID: window.sessionStorage.getItem("sjsuID")
+            sjsuID: this.props.userData.LoginReducer.LoginReducer.sjsuID
+        }
+        const propsData = this.props.userData.LoginReducer.LoginReducer
+        console.log(propsData);
+        if(propsData)
+        {
+            this.setState ({
+                sjsuID: propsData.sjsuID,
+                fName: propsData.fName,
+                lName: propsData.lName,
+                phoneNo: propsData.phoneNo,
+                city: propsData.city,
+                country: propsData.country,
+                company: propsData.company,
+                school: propsData.school,
+                hometown: propsData.hometown,
+                language: propsData.language,
+                gender: propsData.gender,
+                aboutMe: propsData.aboutMe,
+                profilePic: propsData.profilePic,
+                email: propsData.email
+            });
         }
         
-        this.props.getUserDetails(sendData).then(
-            (data) => {
-                console.log("Hello")
-                console.log(data);
-            },
-            (err) => {
+        // this.props.getUserDetails(sendData).then(
+        //     (data) => {
+        //         console.log("Hello")
+        //         console.log(data);
+        //         const propsData = this.props.userData.LoginReducer.LoginReducer
+        //         if(this.props.userData){
+        //             this.setState ({
+        //                 sjsuID: propsData.sjsuID,
+        //                 fName: propsData.fName,
+        //                 lName: propsData.lName,
+        //                 phoneNo: propsData.phoneNo,
+        //                 city: propsData.city,
+        //                 country: propsData.country,
+        //                 company: propsData.company,
+        //                 school: propsData.school,
+        //                 hometown: propsData.hometown,
+        //                 language: propsData.language,
+        //                 gender: propsData.gender,
+        //                 aboutMe: propsData.aboutMe,
+        //                 profilePic: propsData.profilePic,
+        //                 email: propsData.email
+        //             })
 
-            }
+        //         }
+        //     },
+        //     (err) => {
 
-        );
+        //     }
+
+        // );
 
     }
 

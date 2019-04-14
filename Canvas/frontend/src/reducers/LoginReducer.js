@@ -19,6 +19,9 @@ const initialState = {
     email: '',
     token: '',
     message: '',
+    submissions: '',
+    allUsers : '',
+    receivedMessages : ''
 }
 
 const LoginReducer = (state = initialState, action) => {
@@ -47,7 +50,8 @@ const LoginReducer = (state = initialState, action) => {
                                     aboutMe: action.payload.ABOUT_ME,
                                     profilePic: action.payload.PROFILE_PIC,
                                     email: action.payload.EMAIL,
-                                    message: action.payload.message
+                                    message: action.payload.message,
+                                    receivedMessages: action.payload.RECEIVED_MESSAGES,
                                 }
                             }
                             else if(action.payload.code === "ERR_DUP_ENTRY")
@@ -78,7 +82,29 @@ const LoginReducer = (state = initialState, action) => {
                                 aboutMe: action.payload.user.ABOUT_ME,
                                 profilePic: action.payload.user.PROFILE_PIC,
                                 email: action.payload.user.EMAIL,
-                                courses: action.payload.user.COURSES
+                                courses: action.payload.user.COURSES,
+                                receivedMessages: action.payload.user.RECEIVED_MESSAGES
+                            }
+                            break;
+
+    case "ASSIGN_SUB" : console.log(action.payload.user);
+                            state = {
+                                ...state,
+                                submissions: action.payload.SUBMISSIONS
+                            }
+                            break;
+
+    case "ALL_USERS" : console.log(action.payload);
+                        state = {
+                            ...state,
+                            allUsers: action.payload
+                        }
+                        break;
+
+    case "MESSAGE_INFO" : console.log(action.payload);
+                            state = {
+                                ...state,
+                                message: "Message Sent Successfully to : ",
                             }
                             break;
 

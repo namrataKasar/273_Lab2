@@ -227,6 +227,19 @@ users.put('/user/update', (req, res) => {
     // })
 });
 
+//Get all users (for Inbox)
+users.get('/getAllUsers', (req, res) => {
+    User.find({}, function(err, users) {
+        // var userMap = {};
+    
+        // users.forEach(function(user) {
+        //   userMap[user._id] = user;
+        // });
+    
+        res.json({users});  
+      });
+})
+
 //Logout
 users.post('/logout', (req, res) => {
     req.logout();
