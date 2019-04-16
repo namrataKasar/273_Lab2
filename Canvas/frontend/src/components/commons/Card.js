@@ -135,6 +135,7 @@ class Card extends React.Component {
       >
       
           <div className="card">
+     
         <form onSubmit={this.onCardSubmit}>
           {/* <a href="#"> */}
           

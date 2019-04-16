@@ -193,14 +193,37 @@ assignments.post('/assignment/submitGrades', (req, res) => {
         SJSU_ID : reqData.sjsuID,        
     })
     .then(user => {
+        
+        var flag = true;
+        var index;
+        if(user.GRADES.length > 0)
+        {
+            for(var i = 0; i < user.GRADES.length; i++)
+            {
+                if(user.GRADES[i].NAME == reqData.assignmentName && user.GRADES[i].COURSE_ID == reqData.courseId)
+                {
+                    console.log("Dulicate");
+                    flag = false;
+                    inedx = i;
+                }
+            }
+        }
         const grade = {
             COURSE_ID: reqData.courseId,
-            NAME: reqData.assignmentName,
+            NAME: reqData.NAME,
             SCORE: reqData.score,
             OUT_OF: reqData.totalPoints,
-            DUE_DATE: reqData.dueDate
+            DUE_DATE: reqData.dueDate,
         };
-        user.GRADES.push(grade);
+        if(flag)
+        {
+            user.GRADES.push(grade);
+        }
+        else
+        {
+            user.GRADES[index] = grade;
+        }
+
         user.save()
         .then(newUser => {
             Assignment.findOne({
