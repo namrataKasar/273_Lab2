@@ -87,15 +87,19 @@ class AssignmentSubmission extends React.Component {
   }
   submitAssignment = (e, assignment) => {
     console.log(assignment);
+    const propsData = this.props.assignmentData.LoginReducer.LoginReducer;
     e.preventDefault();
     const data = {
       fileUploaded : this.state.fileUploaded,
-      sjsuID : this.props.assignmentData.LoginReducer.LoginReducer.sjsuID,
-      assignment : assignment
+      sjsuID : propsData.sjsuID,
+      assignment : assignment,
+      sName : propsData.fName + " " + propsData.lName,
+      courseId : this.props.location.state.courseId
     }
 
     this.props.submitAssignment(data)
     .then(response => {
+      console.log(this.props.assignmentData.LoginReducer.LoginReducer.submissions);
       this.setState({
         redirectVar : <Redirect to={{
           pathname: "/course/assignments"}}/>
@@ -108,22 +112,19 @@ class AssignmentSubmission extends React.Component {
     console.log(e.target.files);
     let file = e.target.files;
     const fd = new FormData();
-    fd.append('assignments',file[0], file[0].name);
+    fd.append('submissionFile',file[0], file[0].name);
+    fd.append('courseId', this.props.location.state.courseId);
+    fd.append('assignmentId', this.props.location.state.assignment.TITLE);
+    fd.append('sjsuID', this.props.location.state.sjsuID);
+    console.log(fd.get('assignmentId'));
 
-    // this.setState({
-    //   fileUploaded: fd,
-    // })
-    // axios.post('/uploadAssignmentFile', fd)
-    // .then((response) => {
-    //   console.log("http://localhost:3001/" + response.data.substring(9) + file[0].name);
-    //     this.setState({
-    //       fileUploaded: "http://localhost:3001/" + response.data.substring(9) + file[0].name
-    //     })
-         
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // })
+    this.props.uploadSubmission(fd)
+    .then(response=> {
+      console.log(this.props.assignmentData.CourseReducer.CourseReducer.currentFile);
+      this.setState({
+        fileUploaded : this.props.assignmentData.CourseReducer.CourseReducer.currentFile
+      })
+    })
   }
 
     render(){

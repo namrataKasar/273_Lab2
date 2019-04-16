@@ -17,6 +17,7 @@ import Signup from './components/loginSignup/Signup';
 import Inbox from './components/Inbox';
 import AddCode from './components/AddCode';
 import DisplayPDF from './components/commons/DisplayPDF';
+import ViewSubmissions from './components/courseDashboard/ViewSubmissions'
 // import Card from './components/Dashboard/Card';
 // import RegisterForCourses from './components/Courses/RegisterForCourses';
 // import CreateCourse from './components/Courses/CreateCourses'
@@ -43,12 +44,13 @@ class App extends Component {
             <Route path="/registercourses/home" component={RegisterForCourses} />
             <Route path="/registercourses/addcourse" component={RegisterForCourses} />
             <Route path="/course" component={CourseHome} />
-            <Route path="/course/assignment/submission" component={AssignmentSubmission}/>
-            <Route path="/course/assignment/view" component={ViewAssignment}/>
+            <Route path="/course/assignments-submission" component={AssignmentSubmission}/>
+            <Route path="/course/assignmentview" component={ViewAssignment}/>
             <Route path="/course/takequiz" component={TakeQuiz}/>
             <Route path="/inbox" component={Inbox} /> 
             <Route path="/addCode" component={AddCode} /> 
             <Route path="/course/pdfview" component={DisplayPDF} />
+            <Route path="/course/submissionsView" component={ViewSubmissions} />
             {/* <Route path="/test" component={Test}/>
             <Route path="/sidenav" component={Sidenav}/> 
             <Route path="/card" component={Card}/> 

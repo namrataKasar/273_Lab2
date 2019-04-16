@@ -114,7 +114,7 @@ users.post('/login', (req, res) => {
                 //Sign token take in two parameters first is the payload that we created above
                 //and the secret key
                 jwt.sign(payload, secretOrKey, {expiresIn: 8*3600}, (err, token) => {
-                res.json({
+                res.status(200).json({
                     success: true,
                     token: token,
                     user: user,

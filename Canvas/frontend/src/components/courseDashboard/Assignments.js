@@ -159,11 +159,6 @@ class Assignments extends React.Component {
     fd.append('courseId', this.state.courseId);
     console.log(fd.get('courseId'));
 
-    // const data = {
-    //   courseId : this.state.courseId,
-    //   formData : fd
-    // }
-
     this.props.uploadAssignment(fd)
     .then(response=> {
       console.log(this.props.assignmentData.CourseReducer.CourseReducer.currentFile);
@@ -172,20 +167,6 @@ class Assignments extends React.Component {
       })
     })
 
-    // this.setState({
-    //   fileUploaded: fd,
-    // })
-    // axios.post('/uploadAssignmentFile', fd)
-    // .then((response) => {
-    //   console.log("http://localhost:3001/" + response.data.substring(9) + file[0].name);
-    //     this.setState({
-    //       fileUploaded: "http://localhost:3001/" + response.data.substring(9) + file[0].name
-    //     })
-         
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // })
   }
 
   submitAssignment = (e, assignment) => {
@@ -193,10 +174,11 @@ class Assignments extends React.Component {
     console.log(assignment);
     this.setState({
       redirectVar : <Redirect to={{
-                pathname: "/course/assignment/submission",
+                pathname: "/course/assignments-submission",
                 state: {
                   assignment : assignment,
                   sjsuID : this.state.sjsuID,
+                  courseId : this.state.courseId
                 }}}/>
     })
   }
@@ -206,10 +188,24 @@ class Assignments extends React.Component {
     console.log(assignment);
     this.setState({
       redirectVar : <Redirect to={{
-                pathname: "/course/assignment/view",
+                pathname: "/course/assignmentview",
                 state: {
                   assignment : assignment,
                   sjsuID : this.state.sjsuID,
+                }}}/>
+    })
+  }
+
+  viewSubmissions = (e, assignment, index) => {
+    e.preventDefault();
+    console.log(index);
+    this.setState({
+      redirectVar : <Redirect to={{
+                pathname: "/course/submissionsView",
+                state: {
+                  assignment : assignment,
+                  sjsuID : this.state.sjsuID,
+                  index : index
                 }}}/>
     })
   }
@@ -461,7 +457,7 @@ class Assignments extends React.Component {
                                     variant="contained"
                                     color="primary" 
                                     className={classes.button}
-                                    // onClick={}
+                                    onClick={(e) => {this.viewSubmissions(e, this.state.assignmentsList[text], text)}}
                                     >
                                       View Submissions
                                     </Button>

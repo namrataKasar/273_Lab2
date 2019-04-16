@@ -21,7 +21,8 @@ const initialState = {
     message: '',
     submissions: '',
     allUsers : '',
-    receivedMessages : ''
+    receivedMessages : '',
+    grades : ''
 }
 
 const LoginReducer = (state = initialState, action) => {
@@ -52,6 +53,8 @@ const LoginReducer = (state = initialState, action) => {
                                     email: action.payload.EMAIL,
                                     message: action.payload.message,
                                     receivedMessages: action.payload.RECEIVED_MESSAGES,
+                                    submissions: action.payload.SUBMISSIONS,
+                                    grades: action.payload.user.GRADES,
                                 }
                             }
                             else if(action.payload.code === "ERR_DUP_ENTRY")
@@ -83,7 +86,9 @@ const LoginReducer = (state = initialState, action) => {
                                 profilePic: action.payload.user.PROFILE_PIC,
                                 email: action.payload.user.EMAIL,
                                 courses: action.payload.user.COURSES,
-                                receivedMessages: action.payload.user.RECEIVED_MESSAGES
+                                receivedMessages: action.payload.user.RECEIVED_MESSAGES,
+                                submissions: action.payload.user.SUBMISSIONS,
+                                grades: action.payload.user.GRADES,
                             }
                             break;
 
@@ -115,7 +120,17 @@ const LoginReducer = (state = initialState, action) => {
                             }
                             break;
 
-            
+    case "GRADES" : console.log(action.payload);
+                            if(action.payload.user)
+                            {
+                                state = {
+                                    ...state,
+                                    grades : action.payload.user.GRADES,
+                                    errorMessage : ''
+                                }
+                            }
+                            
+                            break;        
         
     }
     return state;

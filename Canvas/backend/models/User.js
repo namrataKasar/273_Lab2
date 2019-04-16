@@ -57,21 +57,26 @@ const UserSchema = new mongoose.Schema({
     COURSES: [
         { type: mongoose.Schema.ObjectId, ref: 'Course' }
     ],
-    SUBMISSIONS: [
-        {
-            FILE_PATH: String,
-            ASSIGNMENTS: {
-                type: mongoose.Schema.ObjectId, ref: 'Assignment'
-            },
-            DATE: Date,
-            GRADES: Number,
-        }
-    ],
     RECEIVED_MESSAGES:[
         {
             MESSAGE: String,
             Date: Date,
             FROM: String,
+        }
+    ],
+    GRADES: [
+        {
+            COURSE_ID: String,
+            NAME: String,
+            SCORE: Number,
+            OUT_OF: Number,
+            DUE_DATE: Date
+        }
+    ],
+    SUBMISSIONS: [
+        {
+            AS_TITLE: String,
+            COURSE_ID: String
         }
     ]
 })

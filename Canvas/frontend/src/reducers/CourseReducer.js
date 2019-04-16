@@ -14,7 +14,8 @@ const initialState = {
     assignments: '',
     quizzes: '',
     errorMessage: '',
-    currentFile: ''
+    currentFile: '',
+    assignSubmissions: '',
 }
 
 const CourseReducer = (state = initialState, action) => {
@@ -113,6 +114,18 @@ const CourseReducer = (state = initialState, action) => {
                                 state = {
                                     ...state,
                                     currentFile : action.payload.imageURL,
+                                    errorMessage : ''
+                                }
+                            }
+                            
+                            break;
+                        
+        case "GRADES" : console.log(action.payload);
+                            if(action.payload.assignment)
+                            {
+                                state = {
+                                    ...state,
+                                    assignSubmissions : action.payload.assignment.SUBMISSIONS,
                                     errorMessage : ''
                                 }
                             }

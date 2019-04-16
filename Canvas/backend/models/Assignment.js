@@ -15,7 +15,19 @@ const AssignmentSchema = new mongoose.Schema({
     },
     TIME_CREATED: {
         type: Date,
-    }
+    },
+    COURSE: {
+        type: String 
+    },
+    SUBMISSIONS: [
+        {
+            FILE_PATH: String,
+            DATE: Date,
+            SJSU_ID: String,
+            STUDENT_NAME: String,
+            GRADES: Number
+        }
+    ],
 })
 
 const Assignment = mongoose.model('Assignment', AssignmentSchema);

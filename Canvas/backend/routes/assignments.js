@@ -20,12 +20,13 @@ assignments.post('/assignment/create', (req, res)=>{
     var currentTime = datetime.create();
     console.log(new Date(currentTime.getTime()));
     var saveTime = new Date(currentTime.getTime());
-    console.log(req.body.data.title);
+    console.log(req.body.data.assignmentTitle);
 
     console.log(req.body)
     Assignment.findOne({
         where:{
-            TITLE: req.body.data.title
+            TITLE: req.body.data.assignmentTitle,
+            COURSE: req.body.data.courseId
         }
     })
     .then(assignment => {
@@ -35,7 +36,8 @@ assignments.post('/assignment/create', (req, res)=>{
                 TOTAL_POINTS:req.body.data.totalPoints,
                 DUE_DATE:req.body.data.dueDate,
                 TIME_CREATED:saveTime,
-                FILE_PATH: req.body.data.fileUploaded
+                FILE_PATH: req.body.data.fileUploaded,
+                COURSE: req.body.data.courseId
             })
             newAssignment.save()
             .then(assignment => {
@@ -58,11 +60,17 @@ assignments.post('/assignment/create', (req, res)=>{
                             else 
                             res.json({
                                 course : newCourse,
-                                message : "Course with ID " + newCourse.COURSE_ID + " created successfully!!"
+                                // message : "Course with ID " + newCourse.COURSE_ID + " created successfully!!"
                             }) 
                         });
                     })
                 })
+            })
+        }
+        else
+        {
+            res.json({
+                message : "Assignment with this title already exists."
             })
         }
     })
@@ -96,27 +104,138 @@ assignments.post('/course/getAssignments', (req, res) => {
 assignments.post('/assignment/submit', (req, res) => {
 
     console.log("In submision ---------")
+    var currentTime = datetime.create();
+    console.log(new Date(currentTime.getTime()));
+    var saveTime = new Date(currentTime.getTime());
     console.log(req.body.data);
+    const reqData = req.body.data;
+    Assignment.findOne({
+        TITLE : reqData.assignment.TITLE,
+        COURSE : reqData.courseId
+    })
+    .then(assignment => {
+        var flag = true;
+        var index;
+        if(assignment.SUBMISSIONS.length > 0)
+        {
+            for(var i = 0; i < assignment.SUBMISSIONS.length; i++)
+            {
+                if(assignment.SUBMISSIONS[i].FILE_PATH == reqData.fileUploaded)
+                {
+                    console.log("Dulicate");
+                    flag = false;
+                    inedx = i;
+                }
+            }
+        }
+        var sub = {
+            FILE_PATH: reqData.fileUploaded,
+            DATE: saveTime,
+            SJSU_ID: reqData.sjsuID,
+            STUDENT_NAME: reqData.sName
+        }
+        if(flag)
+        {
+            assignment.SUBMISSIONS.push(sub);
+        }
+        else
+        {
+            assignment.SUBMISSIONS[index] = sub;
+        }
+        assignment.save()
+        .then(as => {
+            User.findOne({
+                SJSU_ID : reqData.sjsuID
+            })
+            .then(user => {
+                var asDetails = {
+                    AS_TITLE: as.TITLE,
+                    COURSE_ID: reqData.courseId
+                }
+                user.SUBMISSIONS.push(asDetails);
+                user.save()
+                .then(newUser => {
+                    res.json({
+                        user : newUser
+                    })
+                })
+            })
+        })
+        .catch(error => {
+            res.json({error});
+        })
+    })
+})
+
+assignments.post('/assignment/getSubmissions', (req, res) => {
+
+    console.log("In get Submissions ---------");
+    console.log(req.body.data);
+    const reqData = req.body.data;
+    Assignment.findOne({
+        TITLE : reqData.assignment.TITLE,
+        COURSE : reqData.courseId
+    })
+    .then(assignment => {
+        res.json({assignment});
+    })
+    .catch(error => {
+        res.json({error});
+    })
+})
+
+assignments.post('/assignment/submitGrades', (req, res) => {
+
+    console.log("In submit grades ---------");
+    console.log(req.body.data);
+    const reqData = req.body.data;
     User.findOne({
-        SJSU_ID : req.body.data.sjsuID
+        SJSU_ID : reqData.sjsuID,        
     })
     .then(user => {
-        console.log("**********")
-        console.log(user)
-        user.SUBMISSIONS.push(req.body.data.assignment);
-        user.FILE_PATH = req.body.data.fileUploaded;
+        const grade = {
+            COURSE_ID: reqData.courseId,
+            NAME: reqData.assignmentName,
+            SCORE: reqData.score,
+            OUT_OF: reqData.totalPoints,
+            DUE_DATE: reqData.dueDate
+        };
+        user.GRADES.push(grade);
         user.save()
         .then(newUser => {
             Assignment.findOne({
-                _id : assignment._id
+                TITLE : reqData.assignmentName,
+                COURSE : reqData.courseId
             })
-            .then(assign => { 
-                res.json({
-                    
+            .then(as => {
+                if(as.SUBMISSIONS.length > 0)
+                {
+                    for(var i = 0; i < as.SUBMISSIONS.length; i++)
+                    {
+                        if(as.SUBMISSIONS[i].SJSU_ID == reqData.sjsuID)
+                        {
+                            as.SUBMISSIONS[i].GRADES = reqData.score
+                        }
+                    }
+                }
+                as.save()
+                .then(subAs => {
+                    // console.log(subAs.SUBMISSIONS);
+                    res.json({
+                        assignment : subAs,
+                        user : newUser
+                    })
                 })
             })
+            // res.json({user : newUser});
+        })
+        .catch(error => {
+            res.json({error});
+        })
+        
     })
-
+    .catch(error => {
+        res.json({error});
     })
 })
 
@@ -164,6 +283,50 @@ assignments.post('/assignment/upload', (req, res) => {
 
 
 })
+
+assignments.post('/assignment/submission/upload', (req, res) => {
+
+    //File upload starts
+     console.log(req.get('courseId'));
+     var userFolder = 'namcanvas/submissions/' + req.get('courseId') + "/" + req.get('assignmentId');
+     
+     aws.config.update({
+         accessKeyId :'AKIAZC7CQASPVATLUEXY',
+         secretAccessKey : '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',
+         region : 'us-west-1',
+         
+     })
+     
+     const s3 = new aws.S3({    
+         sslEnabled: false,
+     });
+     
+     const upload = multer({
+         storage: multerS3({
+           s3: s3,
+           acl: 'public-read',
+           bucket: userFolder,
+           contentType: multerS3.AUTO_CONTENT_TYPE,
+           key: function (req, file, cb) {
+             cb(null, req.get('studentID'))
+           }
+         })
+       })
+ 
+       const singleUpload = upload.single('submissionFile');
+ 
+       singleUpload(req, res, function(err){
+         console.log(req.file);
+         if (err) {
+             return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message}] });
+         }
+         return res.json({
+             imageURL : req.file.location,
+         });
+     })
+ 
+ 
+ })
 
 
 
