@@ -84,7 +84,7 @@ class DisplayPDF extends Component {
         assignmentName : propsData.assignment.TITLE,
         score : this.state.grades,
         totalPoints : totalPoints,
-        dueDate : propsData.assignment.DUE_DATE
+        dueDate : propsData.assignment.DUE_DATE,
       }
       this.props.submitGrades(data)
       .then(response => {

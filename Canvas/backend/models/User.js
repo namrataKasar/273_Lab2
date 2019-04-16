@@ -70,7 +70,8 @@ const UserSchema = new mongoose.Schema({
             NAME: String,
             SCORE: Number,
             OUT_OF: Number,
-            DUE_DATE: Date
+            DUE_DATE: Date,
+            OUT_OF: Number,
         }
     ],
     SUBMISSIONS: [

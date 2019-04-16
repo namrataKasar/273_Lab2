@@ -134,12 +134,7 @@ class Card extends React.Component {
         onStop={this.handleStop}
       >
       <div className="card">
-      connectDragSource &&
-      connectDropTarget &&
-      connectDragSource(
-        connectDropTarget
-        (
-          <div className="card">
+     
         <form onSubmit={this.onCardSubmit}>
           {/* <a href="#"> */}
           
@@ -165,8 +160,6 @@ class Card extends React.Component {
             
           {/* </a> */}
         </form>
-      </div>
-        ))
       </div>
         
       </Draggable>

@@ -14,7 +14,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {Link, Route} from 'react-router-dom';
 import People from './People';
-// import Grades from './Grades';
+import Grades from './Grades';
 // import People from './People';
 // import Home from './Home';
 import Announcements from './Announcements';
@@ -188,6 +188,7 @@ class CourseInsideMenu extends React.Component {
             <Route path="/course/announcements" render={()=> { return <Announcements />}} />
             <Route path="/course/assignments" render={()=> { return <Assignments />}} />
             <Route path="/course/quizzes" render={()=> { return <Quizzes />}} />
+            <Route path="/course/grades" render={()=> { return <Grades />}} />
             {/*<Route path="/course/people" render={()=> { return <People />}} />
             <Route path="/course/announcements" render={()=> { return <Announcements />}} />
             <Route path="/course/files" render={()=> { return <Files />}} />
