@@ -96,11 +96,14 @@ class Grades extends React.Component {
     const courseId = this.props.gradesData.CourseReducer.CourseReducer.courseId;
     console.log(propsData);
     let gradesList = [];
+    let totalMarks = 0, totalScore = 0;
     for(let i = 0; i < propsData.grades.length; i++)
     {
       if(propsData.grades[i].COURSE_ID == courseId)
       {
         gradesList.push(propsData.grades[i]);
+        totalScore += propsData.grades[i].SCORE;
+        totalMarks += propsData.grades[i].OUT_OF;
       }
     }
     console.log(gradesList);
@@ -147,10 +150,10 @@ class Grades extends React.Component {
                           <CustomTableCell component="th" scope="row">
                           <strong>Total</strong>
                           </CustomTableCell>
-                          <CustomTableCell align="right"></CustomTableCell>
-                          <CustomTableCell align="right">30</CustomTableCell>
-                          <CustomTableCell align="right">40</CustomTableCell>
-                          <CustomTableCell align="right"></CustomTableCell>
+                          <CustomTableCell align="left"></CustomTableCell>
+                          <CustomTableCell align="left">{totalScore}</CustomTableCell>
+                          <CustomTableCell align="left">{totalMarks}</CustomTableCell>
+                          <CustomTableCell align="left"></CustomTableCell>
                         </TableRow>
                     </TableBody>
                   </Table>

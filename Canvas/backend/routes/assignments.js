@@ -200,6 +200,8 @@ assignments.post('/assignment/submitGrades', (req, res) => {
         {
             for(var i = 0; i < user.GRADES.length; i++)
             {
+                console.log(user.GRADES[i].NAME);
+                console.log(user.GRADES[i].COURSE_ID);
                 if(user.GRADES[i].NAME == reqData.assignmentName && user.GRADES[i].COURSE_ID == reqData.courseId)
                 {
                     console.log("Dulicate");
@@ -210,7 +212,7 @@ assignments.post('/assignment/submitGrades', (req, res) => {
         }
         const grade = {
             COURSE_ID: reqData.courseId,
-            NAME: reqData.NAME,
+            NAME: reqData.assignmentName,
             SCORE: reqData.score,
             OUT_OF: reqData.totalPoints,
             DUE_DATE: reqData.dueDate,

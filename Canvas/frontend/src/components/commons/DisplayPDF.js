@@ -84,19 +84,20 @@ class DisplayPDF extends Component {
         assignmentName : propsData.assignment.TITLE,
         score : this.state.grades,
         totalPoints : totalPoints,
-        dueDate : propsData.assignment.DUE_DATE,
+        dueDate : propsData.assignment.DUE_DATE
       }
       this.props.submitGrades(data)
       .then(response => {
         const asList = this.props.assignmentData.CourseReducer.CourseReducer.assignments;
         const index = this.props.location.mainIndex
-        console.log(asList + " " + index);
+        console.log(asList[index]);
         this.setState({
           redirectVar :  <Redirect to={{
             pathname: "/course/submissionsView",
             state : {
               assignment : asList[index],
-              index : index
+              index : index,
+              pdf : true
             }
           }}/>
         })

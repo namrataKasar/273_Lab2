@@ -127,7 +127,18 @@ class ViewSubmissions extends React.Component {
 
     render(){
       const { classes } = this.props;
-      const assignment = this.props.location.state.assignment;
+      let assignment = "";
+      console.log(this.props.location);
+
+     if(this.props.location.state.pdf)
+     {
+      assignment = this.props.assignmentData.CourseReducer.CourseReducer.assignSubmissions;
+      console.log(assignment);
+     }
+     else
+     {
+      assignment = this.props.location.state.assignment.SUBMISSIONS;
+     }
       
     console.log(this.props.location);
         return(
@@ -157,21 +168,21 @@ class ViewSubmissions extends React.Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {Object.keys(assignment.SUBMISSIONS).map(option => (
+                      {Object.keys(assignment).map(option => (
                         <TableRow className={classes.row} key={option}>
                           <CustomTableCell align="left">
-                            {assignment.SUBMISSIONS[option].SJSU_ID}
+                            {assignment[option].SJSU_ID}
                           </CustomTableCell>
-                          <CustomTableCell align="left">{assignment.SUBMISSIONS[option].STUDENT_NAME}</CustomTableCell>
-                          <CustomTableCell align="left">{assignment.SUBMISSIONS[option].DATE.slice(0,10)}</CustomTableCell>
-                          <CustomTableCell align="left">{assignment.SUBMISSIONS[option].GRADES}</CustomTableCell>
+                          <CustomTableCell align="left">{assignment[option].STUDENT_NAME}</CustomTableCell>
+                          <CustomTableCell align="left">{assignment[option].DATE.slice(0,10)}</CustomTableCell>
+                          <CustomTableCell align="left">{assignment[option].GRADES}</CustomTableCell>
                           <CustomTableCell align="left">
                           <Button
                             type="submit"
                             variant="contained"
                             color="primary" 
                             className={classes.button}
-                             onClick={(e) => {this.viewSubmission(e, assignment.SUBMISSIONS[option], option)}}
+                             onClick={(e) => {this.viewSubmission(e, assignment[option], option)}}
                           >
                             SHow
                           </Button>
