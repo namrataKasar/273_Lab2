@@ -10,6 +10,21 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var cors = require('cors');
 
+
+//use cors to allow cross origin resource sharing
+app.use(cors({ origin: 'http://52.9.213.58:3000', credentials: true }));
+app.use(bodyParser.json());
+
+//Allow Access Control
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://52.9.213.58:3000');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+    res.setHeader('Cache-Control', 'no-cache');
+    next();
+  });
+
 //Database connection starts
 var mongoose = require('mongoose');
 var db = require('./config/keys').mongoURL;
@@ -31,8 +46,6 @@ app.use(session({
     resave: true,
     saveUninitialized:true
 }))
-
-app.use(cors());
 
 //body parser
 app.use(bodyParser.json());

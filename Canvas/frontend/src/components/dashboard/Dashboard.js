@@ -10,6 +10,8 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd';
 import update from 'immutability-helper';
 
+// import Draggable from 'react-draggable';
+
 class Dashboard extends React.Component {
     state={
         sjsuID : '', //logged in user
@@ -158,7 +160,9 @@ class Dashboard extends React.Component {
                                   <Typography variant="h6" style={{color: '#008ee2'}} noWrap>
                                       {message}
                                   </Typography>
+                                  
                                     {elements}
+                                  
                             </div>
                         </Grid>
                     </Grid>

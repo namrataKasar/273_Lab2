@@ -19,6 +19,7 @@ import { bindActionCreators } from 'redux';
 import * as getData from '../../actions/loginAction';
 
 
+import Draggable from 'react-draggable';
 
 const cardSource = {
   beginDrag(props) {
@@ -117,10 +118,22 @@ class Card extends React.Component {
       isDragging,
       connectDragSource,
       connectDropTarget,
-    } = this.props;
+      } = this.props;
     const opacity = isDragging ? 0 : 1;
 
     return (
+      <Draggable
+        // axis="x"
+        // handle=".handle"
+        defaultPosition={{x: 0, y: 0}}
+        position={null}
+        grid={[25, 25]}
+        scale={1}
+        onStart={this.handleStart}
+        onDrag={this.handleDrag}
+        onStop={this.handleStop}
+      >
+      <div className="card">
       connectDragSource &&
       connectDropTarget &&
       connectDragSource(
@@ -129,15 +142,15 @@ class Card extends React.Component {
           <div className="card">
         <form onSubmit={this.onCardSubmit}>
           {/* <a href="#"> */}
-          <Link style={{color : 'rgb(98, 110, 123)'}}
-               to={{pathname: '/course/home'}} 
-               onClick={() => this.setCourse(this.props.value.COURSE_ID, this.props.value.COURSE_NAME)}
-               >
+          
             <header className="card-header">
             </header>
             {/* <CardBody title={'What happened in Thialand?'} text={'Kayaks crowd Three Sister Springs, where people and manatees maintain controversial coexistence'}/> */}
             <div className="card-content">
-             
+            <Link style={{color : 'rgb(98, 110, 123)'}}
+               to={{pathname: '/course/home'}} 
+               onClick={() => this.setCourse(this.props.value.COURSE_ID, this.props.value.COURSE_NAME)}
+               >  
                 <h2 className="card-content-title ellipsis">
                   <span>{this.props.value.DEPARTMENT}</span>
                 </h2>
@@ -147,14 +160,16 @@ class Card extends React.Component {
                 <div className="card-term ellipsis">
                 {this.props.value.TERM}
                 </div>
-              
+                </Link>
             </div>
-            </Link>
+            
           {/* </a> */}
         </form>
       </div>
-        ),
-      )
+        ))
+      </div>
+        
+      </Draggable>
     )
   }
 }
