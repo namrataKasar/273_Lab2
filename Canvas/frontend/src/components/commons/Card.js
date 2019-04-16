@@ -133,7 +133,8 @@ class Card extends React.Component {
         onDrag={this.handleDrag}
         onStop={this.handleStop}
       >
-      <div className="card">
+      
+          <div className="card">
      
         <form onSubmit={this.onCardSubmit}>
           {/* <a href="#"> */}
@@ -158,9 +159,9 @@ class Card extends React.Component {
                 </Link>
             </div>
             
-          {/* </a> */}
         </form>
       </div>
+       
         
       </Draggable>
     )
