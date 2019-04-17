@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+// import Table from "@material-ui/core/Table";
+// import TableBody from "@material-ui/core/TableBody";
+// import TableCell from "@material-ui/core/TableCell";
+// import TableHead from "@material-ui/core/TableHead";
+// import TableRow from "@material-ui/core/TableRow";
 import {Typography, TextField, Paper, Button} from '@material-ui/core';
+import {TableCell, TableBody, TablePagination, TableHead, TableRow, Table} from '@material-ui/core';
 import {Redirect} from 'react-router'
 import Axios from 'axios';
 import { bindActionCreators } from 'redux';
@@ -79,7 +80,9 @@ class FormTable extends React.Component {
     addByCode : false,
     addByCodeCourseID : '',
     addCode: '',
-    errorMessage: ''
+    errorMessage: '',
+    page : 0,
+    rowsPerPage : 5,
 
   }
 
@@ -132,7 +135,10 @@ class FormTable extends React.Component {
      
       this.props.deleteCourse(data)
       .then(response => {
-
+        console.log(response);
+        this.setState({
+              redirect : <Redirect to='/dashboard'/>
+            })
       })
       .catch(error => {
         
@@ -159,6 +165,12 @@ class FormTable extends React.Component {
 
   }
 
+  
+  handleChangePage = (event, page) => {
+    this.setState({ page });
+  };
+
+
   render() {
     const { classes } = this.props;
     console.log("Form table")
@@ -174,22 +186,73 @@ class FormTable extends React.Component {
       console.log(rows);
     }
     
+    const {rowsPerPage, page } = this.state;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
     
       
     let mainBody = '';
-        if(rows != '')
-        {
-          mainBody = rows.map(row => (
-            <TableRow key={row.COURSE_ID}>
+        // if(rows != '')
+        // {
+        //   mainBody = rows.map(row => (
+        //     <TableRow key={row.COURSE_ID}>
             
-            <TableCell>{row.COURSE_ID}</TableCell>
-            <TableCell>{row.COURSE_NAME}</TableCell>
-            <TableCell>{row.CREATED_BY}</TableCell>
-            <TableCell>{row.COURSE_ROOM}</TableCell>
-            <TableCell><button onClick={(e) => this.onSubmit(e, row.COURSE_ID, btn)}>{btn}</button></TableCell>
-            </TableRow>
-        ));
-        }
+        //     <TableCell>{row.COURSE_ID}</TableCell>
+        //     <TableCell>{row.COURSE_NAME}</TableCell>
+        //     <TableCell>{row.CREATED_BY.FNAME}</TableCell>
+        //     <TableCell>{row.COURSE_ROOM}</TableCell>
+        //     <TableCell><button onClick={(e) => this.onSubmit(e, row.COURSE_ID, btn)}>{btn}</button></TableCell>
+        //     </TableRow>
+        // ));
+        // }
+
+
+        mainBody = <div style={{display: (rows.length == 0) ? 'none' : 'block'}}>
+                <div className={classes.tableWrapper}>
+                  <Table className={classes.table} aria-labelledby="tableTitle">
+                    
+                    <TableBody>
+                      {rows
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map(row => {
+                          return (
+                            <TableRow
+                              hover
+                              tabIndex={-1}
+                              key={row}
+                            >
+                              <TableCell>{row.COURSE_ID}</TableCell>
+                              <TableCell>{row.COURSE_NAME}</TableCell>
+                              <TableCell>{row.COURSE_ROOM}</TableCell>
+                              <TableCell><button onClick={(e) => this.onSubmit(e, row.COURSE_ID, btn)}>{btn}</button></TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      {emptyRows > 0 && (
+                        <TableRow style={{ height: 49 * emptyRows }}>
+                          <TableCell colSpan={6} />
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                  }}
+                  nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                  }}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
+              </div>
+
     // }
 
     let message = '';
@@ -218,7 +281,7 @@ class FormTable extends React.Component {
         
         <Paper className={classes.paperClass}>
             <Table className={classes.table} style={{display : showTable ? 'inline-table': 'none'}}>
-                <TableHead>
+                {/* <TableHead>
                   <TableRow>
 
                     {headers.map((text, index) => (
@@ -226,7 +289,7 @@ class FormTable extends React.Component {
                     ))}
 
                   </TableRow>
-               </TableHead>
+               </TableHead> */}
                 <TableBody>
                 {mainBody}
                 </TableBody>
