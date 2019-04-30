@@ -272,9 +272,9 @@ assignments.post('/assignment/upload', (req, res) => {
     var userFolder = 'namcanvas' + '/' + req.get('courseId') + '/Assignments';
     
     aws.config.update({
-        accessKeyId :'ACCESS_key',
-        secretAccessKey : 'SECRET_KEY',
-        region : 'REGION',
+        accessKeyId :'AKIAZC7CQASPVATLUEXY',
+        secretAccessKey : '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',
+        region : 'us-west-1',
         
     })
     
@@ -316,11 +316,11 @@ assignments.post('/assignment/submission/upload', (req, res) => {
      var userFolder = 'namcanvas/submissions/' + req.get('courseId') + "/" + req.get('assignmentId');
      
      aws.config.update({
-        accessKeyId :'ACCESS_key',
-        secretAccessKey : 'SECRET_KEY',
-        region : 'REGION',
-        
-    })
+         accessKeyId :'AKIAZC7CQASPVATLUEXY',
+         secretAccessKey : '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',
+         region : 'us-west-1',
+         
+     })
      
      const s3 = new aws.S3({    
          sslEnabled: false,

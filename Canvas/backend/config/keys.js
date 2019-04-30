@@ -1,4 +1,4 @@
 module.exports = {
-    mongoURL : "mongodb+srv://root:root@clustercanvas-w21n9.mongodb.net/test?retryWrites=true",
+    mongoURL : "MONGO_URL",
     secretOrKey : 'secret'
 }
